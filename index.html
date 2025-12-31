@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Happy New Year Akshu 🎆</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", sans-serif;
+    }
+
+    body {
+      overflow: hidden;
+      background: black;
+      color: white;
+    }
+
+    canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+    }
+
+    .card {
+      position: relative;
+      z-index: 1;
+      max-width: 700px;
+      margin: auto;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 40px;
+      text-align: center;
+      animation: zoomIn 1.2s ease forwards;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      animation: fadeDown 1s ease forwards;
+    }
+
+    p {
+      font-size: 1.2rem;
+      line-height: 1.8;
+      opacity: 0;
+      animation: fadeIn 1.5s ease forwards;
+      animation-delay: 0.8s;
+    }
+
+    .heart {
+      font-size: 3.5rem;
+      margin: 25px 0;
+      color: #ff4d6d;
+      animation: pulse 1.2s infinite;
+    }
+
+    .btn {
+      margin-top: 25px;
+      padding: 15px 35px;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 40px;
+      background: linear-gradient(135deg, #ff4d6d, #ff85a1);
+      color: white;
+      cursor: pointer;
+      animation: fadeIn 1.8s ease forwards;
+      animation-delay: 1.4s;
+      box-shadow: 0 15px 40px rgba(255,77,109,0.4);
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes zoomIn {
+      from { transform: translateY(-50%) scale(0.7); opacity: 0; }
+      to { transform: translateY(-50%) scale(1); opacity: 1; }
+    }
+
+    @keyframes fadeDown {
+      from { transform: translateY(-40px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+
+<body>
+
+<canvas id="fireworks"></canvas>
+
+<div class="card">
+  <h1>🎆 Happy New Year Akshu 🎆</h1>
+
+  <p>
+    Dear Akshu 💖<br><br>
+    As the fireworks light up the sky tonight,  
+    I hope your life shines even brighter this year ✨  
+    <br><br>
+    May every dream you carry find its way to reality,  
+    every smile stay longer,  
+    and every moment feel warm, magical, and truly yours 🌸  
+    <br><br>
+    Thank you for being kind, beautiful, and unforgettable.  
+    Here’s to a year filled with love, laughter,  
+    and endless happiness 💫
+  </p>
+
+  <div class="heart">❤️</div>
+
+  <button class="btn" onclick="burst()">💫 A Year As Beautiful As You 💫</button>
+</div>
+
+<script>
+  const canvas = document.getElementById("fireworks");
+  const ctx = canvas.getContext("2d");
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener("resize", resize);
+
+  let fireworks = [];
+
+  class Firework {
+    constructor(x, y) {
+      this.particles = Array.from({ length: 60 }, () => ({
+        x,
+        y,
+        angle: Math.random() * Math.PI * 2,
+        speed: Math.random() * 4 + 1,
+        alpha: 1,
+        color: `hsl(${Math.random() * 360},100%,60%)`
+      }));
+    }
+
+    update() {
+      this.particles.forEach(p => {
+        p.x += Math.cos(p.angle) * p.speed;
+        p.y += Math.sin(p.angle) * p.speed;
+        p.alpha -= 0.015;
+      });
+    }
+
+    draw() {
+      this.particles.forEach(p => {
+        ctx.globalAlpha = p.alpha;
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      ctx.globalAlpha = 1;
+    }
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    fireworks.forEach((f, i) => {
+      f.update();
+      f.draw();
+      if (f.particles.every(p => p.alpha <= 0)) fireworks.splice(i, 1);
+    });
+    requestAnimationFrame(animate);
+  }
+  animate();
+
+  function launch() {
+    fireworks.push(
+      new Firework(
+        Math.random() * canvas.width,
+        Math.random() * canvas.height * 0.6
+      )
+    );
+  }
+
+  function burst() {
+    for (let i = 0; i < 3; i++) launch();
+  }
+
+  setInterval(launch, 900);
+</script>
+
+</body>
+</html>
